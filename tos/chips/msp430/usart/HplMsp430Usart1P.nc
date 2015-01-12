@@ -69,6 +69,10 @@
  * @author: Joe Polastre
  * @version $Revision: 1.7 $ $Date: 2010-06-04 22:30:21 $
  */
+ /**
+ * @author: Yang Zhou <yangz@zju.edu.cn>
+ * @version $Revision: 1.8 $ $Date: 2015-01-12 21:37:21 $
+ */
 
 module HplMsp430Usart1P {
   provides interface AsyncStdControl;
@@ -244,6 +248,19 @@ implementation
       call SIMO.selectModuleFunc();
       call SOMI.selectModuleFunc();
       call UCLK.selectModuleFunc();
+       if( (U1CTL & MM ) == 1)  // Master mode
+	   {
+		  call SIMO.makeOutput();
+		  call SOMI.makeInput();
+		  call UCLK.makeOutput();
+	   }
+	  else  if ( (U1CTL & MM ) == 0) // Slave  mode
+	    {  
+	
+		  call SIMO.makeInput();
+		  call SOMI.makeOutput();
+		  call UCLK.makeInput();
+	   }
     }
     ME2 |= USPIE1;   // USART1 SPI module enable
   }
