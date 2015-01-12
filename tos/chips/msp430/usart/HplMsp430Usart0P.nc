@@ -70,6 +70,10 @@
  * @author: Philipp Huppertz <huppertz@tkn.tu-berlin.de>
  * @version $Revision: 1.8 $ $Date: 2010-06-04 22:30:21 $
  */
+ /**
+ * @author: Yang Zhou <yangz@zju.edu.cn>
+ * @version $Revision: 1.8 $ $Date: 2015-01-12 21:37:21 $
+ */
 
 module HplMsp430Usart0P @safe() {
   provides interface HplMsp430Usart as Usart;
@@ -240,6 +244,19 @@ implementation
       call SIMO.selectModuleFunc();
       call SOMI.selectModuleFunc();
       call UCLK.selectModuleFunc();
+       if( (U1CTL & MM ) == 1)  // Master mode
+	   {
+		  call SIMO.makeOutput();
+		  call SOMI.makeInput();
+		  call UCLK.makeOutput();
+	   }
+	  else  if ( (U1CTL & MM ) == 0) // Slave  mode
+	    {  
+	
+		  call SIMO.makeInput();
+		  call SOMI.makeOutput();
+		  call UCLK.makeInput();
+	   }
     }
     ME1 |= USPIE0;   // USART0 SPI module enable
   }
